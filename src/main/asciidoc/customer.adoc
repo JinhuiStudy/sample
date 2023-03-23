@@ -1,0 +1,184 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+:operation-http-request-title: Example Request
+:operation-http-response-title: Example Response
+
+= 고객 정보 문서
+
+== List API
+
+=== 요청 정보 [HTTP]
+include::{snippets}/customer-list/http-request.adoc[]
+
+=== 응답 정보 [HTTP]
+include::{snippets}/customer-list/http-response.adoc[]
+
+=== 응답 정보 [Body]
+include::{snippets}/customer-list/response-body.adoc[]
+
+=== 응답 정보
+==== [Field]
+include::{snippets}/customer-list/response-fields.adoc[]
+
+=== CURL
+include::{snippets}/customer-list/curl-request.adoc[]
+
+
+== Detail API
+
+=== 요청 정보 [HTTP]
+include::{snippets}/customer-detail/http-request.adoc[]
+
+=== 응답 정보 [성공]
+==== [HTTP]
+include::{snippets}/customer-detail/http-response.adoc[]
+
+==== [Body]
+include::{snippets}/customer-detail/response-body.adoc[]
+
+==== [Field]
+include::{snippets}/customer-detail/response-fields.adoc[]
+
+=== 응답 정보 [실패]
+* 고객 정보가 존재하지 않을 경우
+
+==== [fields]
+include::{snippets}/customer-detail-fail/response-fields.adoc[]
+
+=== CURL
+include::{snippets}/customer-detail/curl-request.adoc[]
+
+
+
+
+
+== Save API
+
+=== 요청 정보 [HTTP]
+include::{snippets}/customer-save/http-request.adoc[]
+
+=== 요청 정보 [Request Body]
+include::{snippets}/customer-save/request-body.adoc[]
+
+=== 응답 정보 [HTTP]
+include::{snippets}/customer-save/http-response.adoc[]
+
+=== 응답 정보 [Body]
+include::{snippets}/customer-save/response-body.adoc[]
+
+=== 응답 정보 [성공]
+==== [Field]
+include::{snippets}/customer-save/response-fields.adoc[]
+
+
+=== 응답 정보 [실패]
+
+* 이름을 입력해주세요.
+* 이름은 5자리 이내로 입력해주세요.
+* 휴대폰 번호를 입력해주세요.
+* 휴대폰 번호는 12자리 이내로 입력해주세요.
+* 휴대폰번호는 숫자로만 입력해주세요.
+
+==== [fields]
+include::{snippets}/customer-save-fail/response-fields.adoc[]
+
+=== CURL
+include::{snippets}/customer-save/curl-request.adoc[]
+
+
+
+== Update Put API
+
+=== 요청 정보 [HTTP]
+include::{snippets}/customer-update-put/http-request.adoc[]
+
+=== 요청 정보 [Request Body]
+include::{snippets}/customer-update-put/request-body.adoc[]
+
+=== 응답 정보 [HTTP]
+include::{snippets}/customer-update-put/http-response.adoc[]
+
+=== 응답 정보 [Body]
+include::{snippets}/customer-update-put/response-body.adoc[]
+
+=== 응답 정보 [성공]
+==== [Field]
+include::{snippets}/customer-update-put/response-fields.adoc[]
+
+
+=== 응답 정보 [실패]
+
+* 고객 정보가 존재하지 않을 경우
+* 이름을 입력해주세요.
+* 이름은 5자리 이내로 입력해주세요.
+* 휴대폰 번호를 입력해주세요.
+* 휴대폰 번호는 12자리 이내로 입력해주세요.
+* 휴대폰번호는 숫자로만 입력해주세요.
+
+==== [fields]
+include::{snippets}/customer-update-put-fail/response-fields.adoc[]
+
+
+=== CURL
+include::{snippets}/customer-update-put/curl-request.adoc[]
+
+
+== Update Patch API
+
+=== 요청 정보 [HTTP]
+include::{snippets}/customer-update-patch/http-request.adoc[]
+
+=== 요청 정보 [Request Body]
+include::{snippets}/customer-update-patch/request-body.adoc[]
+
+=== 응답 정보 [HTTP]
+include::{snippets}/customer-update-patch/http-response.adoc[]
+
+=== 응답 정보 [Body]
+include::{snippets}/customer-update-patch/response-body.adoc[]
+
+=== 응답 정보 [성공]
+==== [Field]
+include::{snippets}/customer-update-patch/response-fields.adoc[]
+
+
+=== 응답 정보 [실패]
+
+* 고객 정보가 존재하지 않을 경우
+* 이름을 입력해주세요.
+* 이름은 5자리 이내로 입력해주세요.
+
+==== [fields]
+include::{snippets}/customer-update-patch-fail/response-fields.adoc[]
+
+
+=== CURL
+include::{snippets}/customer-update-patch/curl-request.adoc[]
+
+
+
+== Delete API
+
+=== 요청 정보 [HTTP]
+include::{snippets}/customer-delete/http-request.adoc[]
+
+=== 응답 정보 [성공]
+==== [HTTP]
+include::{snippets}/customer-delete/http-response.adoc[]
+
+
+=== 응답 정보 [실패]
+* 고객 정보가 존재하지 않을 경우
+
+==== [fields]
+include::{snippets}/customer-delete-fail/response-fields.adoc[]
+
+=== CURL
+include::{snippets}/customer-delete/curl-request.adoc[]

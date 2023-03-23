@@ -2,6 +2,7 @@ package com.example.sample;
 
 import com.example.sample.customer.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,8 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CustomerController.class)
-@MockBean(JpaMetamodelMappingContext.class)
 class CustomerControllerMockTest {
 
     @Autowired
@@ -35,6 +34,7 @@ class CustomerControllerMockTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    @DisplayName("고객 리스트 조회")
     public void getList() throws Exception {
 
         Customer customer = CustomerExample.customer;
@@ -48,6 +48,7 @@ class CustomerControllerMockTest {
     }
 
     @Test
+    @DisplayName("고객 정보 조회 실패")
     public void getNoCustomer() throws Exception {
         given(customerService.getCustomer(1000L)).willReturn(Optional.empty());
 
@@ -61,6 +62,7 @@ class CustomerControllerMockTest {
     }
 
     @Test
+    @DisplayName("고객 정보 조회")
     public void getCustomer() throws Exception {
 
         Customer customer = CustomerExample.customer;
@@ -76,6 +78,7 @@ class CustomerControllerMockTest {
     }
 
     @Test
+    @DisplayName("고객 정보 전체 수정 실패 - 이름 미입력 (Validation)")
     public void putValid() throws Exception {
 
         CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("", "01012345678");
@@ -90,6 +93,7 @@ class CustomerControllerMockTest {
     }
 
     @Test
+    @DisplayName("고객 정보 전체 수정 실패 - 고객 정보 찾을수 없음")
     public void putNoCustomer() throws Exception {
 
         CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("박진희", "01012345678");
@@ -106,6 +110,7 @@ class CustomerControllerMockTest {
     }
 
     @Test
+    @DisplayName("고객 정보 전체 수정")
     public void putSuccess() throws Exception {
         CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("박진희", "01012345678");
         Customer customer = CustomerExample.customer;
@@ -123,6 +128,7 @@ class CustomerControllerMockTest {
     }
 
     @Test
+    @DisplayName("고객 정보 일부 수정 실패 - 이름 미입력 (Validation)")
     public void patchValid() throws Exception {
         CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("");
         this.mockMvc.perform(
@@ -136,6 +142,7 @@ class CustomerControllerMockTest {
     }
 
     @Test
+    @DisplayName("고객 정보 일부 수정 실패 - 고객 정보 찾을수 없음")
     public void patchNoCustomer() throws Exception {
         CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("유광열");
         given(customerService.getCustomer(1000L)).willReturn(Optional.empty());
@@ -152,6 +159,7 @@ class CustomerControllerMockTest {
 
 
     @Test
+    @DisplayName("고객 정보 일부 수정")
     public void patchSuccess() throws Exception {
         CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("유광열");
         Customer customer = CustomerExample.customer;
@@ -165,6 +173,67 @@ class CustomerControllerMockTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(request.getName()))
                 .andExpect(jsonPath("$.tel").value(customer.getTel()))
+                .andDo(print());
+    }
+
+
+
+    @Test
+    @DisplayName("고객 정보 저장 실패 - 이름 미입력 (Validation)")
+    public void postValid() throws Exception {
+        CustomerRequest.CustomerInsertRequest request = new CustomerRequest.CustomerInsertRequest("", "01040234504");
+        this.mockMvc.perform(
+                        post("/customer")
+                                .content(objectMapper.writeValueAsBytes(request))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("이름을 입력해주세요."))
+                .andExpect(jsonPath("$.status").value(400))
+                .andDo(print());
+    }
+
+    // TODO
+//    @Test
+//    public void postSuccess() throws Exception {
+//        CustomerRequest.CustomerInsertRequest request = new CustomerRequest.CustomerInsertRequest("유광열", "01022223333");
+//
+//        Customer customer = request.toEntity();
+//        given(customerService.mergeCustomer(request)).willReturn(customer);
+//
+//        this.mockMvc.perform(
+//                        post("/customer")
+//                                .content(objectMapper.writeValueAsBytes(request))
+//                                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.name").value(customer.getName()))
+//                .andExpect(jsonPath("$.tel").value(customer.getTel()))
+//                .andDo(print());
+//    }
+
+
+    @Test
+    @DisplayName("고객 정보 삭제 실패 - 고객 정보 찾을수 없음")
+    public void deleteNoCustomer() throws Exception {
+        this.mockMvc.perform(
+                        delete("/customer/{id}", 1000L)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value(CustomerConstant.notFoundMessage))
+                .andExpect(jsonPath("$.status").value(400))
+                .andDo(print());
+    }
+
+
+    @Test
+    @DisplayName("고객 정보 삭제")
+    public void deleteSuccess() throws Exception {
+        Customer customer = CustomerExample.customer;
+        given(customerService.getCustomer(customer.getId())).willReturn(Optional.of(customer));
+
+        this.mockMvc.perform(
+                        delete("/customer/{id}", customer.getId())
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 

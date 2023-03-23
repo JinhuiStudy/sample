@@ -32,6 +32,12 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
+
+    @Transactional
+    public Customer mergeCustomer(CustomerRequest.CustomerInsertRequest request) {
+        return mergeCustomer(request.toEntity());
+    }
+
     @Transactional
     public void deleteCustomer(Customer customer) {
         customerRepository.delete(customer);

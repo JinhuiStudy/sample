@@ -12,9 +12,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -44,8 +46,8 @@ public class CustomerController {
                     )
             ),
     })
-    public Iterable<CustomerDTO> getCustomers() {
-        return customerService.getCustomers();
+    public ResponseEntity<List<CustomerDTO>> getCustomers() {
+        return ResponseEntity.ok(customerService.getCustomers());
     }
 
 
@@ -69,14 +71,14 @@ public class CustomerController {
                     )
             ),
     })
-    public CustomerDTO getCustomer(
+    public ResponseEntity<CustomerDTO> getCustomer(
             @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id
     ) {
         Optional<Customer> customerOptional = customerService.getCustomer(id);
         if (customerOptional.isEmpty()) {
             throw new Common400Exception(CustomerConstant.notFoundMessage);
         }
-        return customerOptional.get().toDTO();
+        return ResponseEntity.ok(customerOptional.get().toDTO());
     }
 
     @PostMapping
@@ -99,7 +101,7 @@ public class CustomerController {
                     )
             ),
     })
-    public CustomerDTO saveCustomer(
+    public ResponseEntity<CustomerDTO> saveCustomer(
             @RequestBody @Valid CustomerRequest.CustomerInsertRequest request,
             Errors errors
     ) {
@@ -107,7 +109,7 @@ public class CustomerController {
             throw new Common400Exception(errors.getFieldErrors().get(0).getDefaultMessage());
         }
 
-        return customerService.mergeCustomer(request.toEntity()).toDTO();
+        return ResponseEntity.ok(customerService.mergeCustomer(request).toDTO());
     }
 
     @Operation(summary = "고객 전체 수정", description = "고객 정보를 전체 수정합니다.")
@@ -130,7 +132,7 @@ public class CustomerController {
             ),
     })
     @PutMapping("/{id}")
-    public CustomerDTO putCustomer(
+    public ResponseEntity<CustomerDTO> putCustomer(
             @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id,
             @RequestBody @Valid CustomerRequest.CustomerPutUpdateRequest request,
             Errors errors
@@ -146,7 +148,7 @@ public class CustomerController {
         Customer customer = customerOptional.get();
         request.update(customer);
 
-        return customerService.mergeCustomer(customer).toDTO();
+        return ResponseEntity.ok(customerService.mergeCustomer(customer).toDTO());
     }
 
     @Operation(summary = "고객 일부 수정", description = "고객 정보를 일부 수정합니다.")
@@ -169,7 +171,7 @@ public class CustomerController {
             ),
     })
     @PatchMapping("/{id}")
-    public CustomerDTO patchCustomer(
+    public ResponseEntity<CustomerDTO> patchCustomer(
             @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id,
             @RequestBody @Valid CustomerRequest.CustomerPatchUpdateRequest request,
             Errors errors
@@ -185,7 +187,7 @@ public class CustomerController {
         Customer customer = customerOptional.get();
         request.update(customer);
 
-        return customerService.mergeCustomer(customer).toDTO();
+        return ResponseEntity.ok(customerService.mergeCustomer(customer).toDTO());
     }
 
 
@@ -196,7 +198,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
     @DeleteMapping("/{id}")
-    public void deleteCustomer(
+    public ResponseEntity<?> deleteCustomer(
             @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id
     ) {
 
@@ -206,6 +208,7 @@ public class CustomerController {
         }
 
         customerService.deleteCustomer(customerOptional.get());
+        return ResponseEntity.ok().build();
     }
 
 }
