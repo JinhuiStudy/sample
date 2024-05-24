@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.restdocs.snippet.Attributes;
+import org.springframework.restdocs.templates.TemplateFormats;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -38,9 +38,10 @@ public class CustomerIntegratedTest {
             WebApplicationContext webApplicationContext,
             RestDocumentationContextProvider restDocumentation
     ) {
+        // markdown 문서 생성
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .addFilters(new CharacterEncodingFilter("UTF-8", true))
-                .apply(documentationConfiguration(restDocumentation))
+                .addFilter(new CharacterEncodingFilter("UTF-8", true))
+                .apply(documentationConfiguration(restDocumentation).snippets().withEncoding("UTF-8").withTemplateFormat(TemplateFormats.markdown()))
                 .alwaysDo(print())
                 .build();
     }
@@ -106,7 +107,7 @@ public class CustomerIntegratedTest {
     @Test
     @DisplayName("고객 정보 저장")
     public void postSuccess() throws Exception {
-        CustomerRequest.CustomerInsertRequest request = new CustomerRequest.CustomerInsertRequest("유광열", "01022223333");
+        CustomerRequest.InsertRequest request = new CustomerRequest.InsertRequest("유광열", "01022223333");
         mockMvc .perform( post("/customer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request))
@@ -126,7 +127,7 @@ public class CustomerIntegratedTest {
     @Test
     @DisplayName("고객 정보 저장 실패")
     public void postFail() throws Exception {
-        CustomerRequest.CustomerInsertRequest request = new CustomerRequest.CustomerInsertRequest("", "01022223333");
+        CustomerRequest.InsertRequest request = new CustomerRequest.InsertRequest("", "01022223333");
         mockMvc .perform( post("/customer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request))
@@ -149,7 +150,7 @@ public class CustomerIntegratedTest {
     @Test
     @DisplayName("고객 정보 전체 수정")
     public void putSuccess() throws Exception {
-        CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("유광열", "01022223333");
+        CustomerRequest.PutUpdateRequest request = new CustomerRequest.PutUpdateRequest("유광열", "01022223333");
         mockMvc .perform( put("/customer/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request))
@@ -169,7 +170,7 @@ public class CustomerIntegratedTest {
     @Test
     @DisplayName("고객 정보 전체 수정 실패")
     public void putFail() throws Exception {
-        CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("", "01022223333");
+        CustomerRequest.PutUpdateRequest request = new CustomerRequest.PutUpdateRequest("", "01022223333");
         mockMvc .perform( put("/customer/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request))
@@ -192,7 +193,7 @@ public class CustomerIntegratedTest {
     @Test
     @DisplayName("고객 정보 일부 수정")
     public void patchSuccess() throws Exception {
-        CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("유광열");
+        CustomerRequest.PatchUpdateRequest request = new CustomerRequest.PatchUpdateRequest("유광열");
         mockMvc .perform( patch("/customer/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request))
@@ -212,7 +213,7 @@ public class CustomerIntegratedTest {
     @Test
     @DisplayName("고객 정보 일부 수정 실패")
     public void patchFail() throws Exception {
-        CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("");
+        CustomerRequest.PatchUpdateRequest request = new CustomerRequest.PatchUpdateRequest("");
         mockMvc .perform( patch("/customer/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request))

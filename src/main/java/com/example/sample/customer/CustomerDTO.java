@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@Schema(description = "고객 정보")
+//@Schema(description = "고객 정보")
 @Getter @Setter @AllArgsConstructor
 public class CustomerDTO {
 

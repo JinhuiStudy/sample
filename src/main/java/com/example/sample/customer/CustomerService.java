@@ -34,7 +34,7 @@ public class CustomerService {
 
 
     @Transactional
-    public Customer mergeCustomer(CustomerRequest.CustomerInsertRequest request) {
+    public Customer mergeCustomer(CustomerRequest.InsertRequest request) {
         return mergeCustomer(request.toEntity());
     }
 

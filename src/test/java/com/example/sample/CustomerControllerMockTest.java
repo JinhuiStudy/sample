@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -81,7 +80,7 @@ class CustomerControllerMockTest {
     @DisplayName("고객 정보 전체 수정 실패 - 이름 미입력 (Validation)")
     public void putValid() throws Exception {
 
-        CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("", "01012345678");
+        CustomerRequest.PutUpdateRequest request = new CustomerRequest.PutUpdateRequest("", "01012345678");
         this.mockMvc.perform(
                         put("/customer/{id}", 1000L)
                                 .content(objectMapper.writeValueAsBytes(request))
@@ -96,7 +95,7 @@ class CustomerControllerMockTest {
     @DisplayName("고객 정보 전체 수정 실패 - 고객 정보 찾을수 없음")
     public void putNoCustomer() throws Exception {
 
-        CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("박진희", "01012345678");
+        CustomerRequest.PutUpdateRequest request = new CustomerRequest.PutUpdateRequest("박진희", "01012345678");
 
         given(customerService.getCustomer(1000L)).willReturn(Optional.empty());
         this.mockMvc.perform(
@@ -112,7 +111,7 @@ class CustomerControllerMockTest {
     @Test
     @DisplayName("고객 정보 전체 수정")
     public void putSuccess() throws Exception {
-        CustomerRequest.CustomerPutUpdateRequest request = new CustomerRequest.CustomerPutUpdateRequest("박진희", "01012345678");
+        CustomerRequest.PutUpdateRequest request = new CustomerRequest.PutUpdateRequest("박진희", "01012345678");
         Customer customer = CustomerExample.customer;
         given(customerService.getCustomer(customer.getId())).willReturn(Optional.of(customer));
         given(customerService.mergeCustomer(customer)).willReturn(customer);
@@ -130,7 +129,7 @@ class CustomerControllerMockTest {
     @Test
     @DisplayName("고객 정보 일부 수정 실패 - 이름 미입력 (Validation)")
     public void patchValid() throws Exception {
-        CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("");
+        CustomerRequest.PatchUpdateRequest request = new CustomerRequest.PatchUpdateRequest("");
         this.mockMvc.perform(
                         patch("/customer/{id}", 1000L)
                                 .content(objectMapper.writeValueAsBytes(request))
@@ -144,7 +143,7 @@ class CustomerControllerMockTest {
     @Test
     @DisplayName("고객 정보 일부 수정 실패 - 고객 정보 찾을수 없음")
     public void patchNoCustomer() throws Exception {
-        CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("유광열");
+        CustomerRequest.PatchUpdateRequest request = new CustomerRequest.PatchUpdateRequest("유광열");
         given(customerService.getCustomer(1000L)).willReturn(Optional.empty());
 
         this.mockMvc.perform(
@@ -161,7 +160,7 @@ class CustomerControllerMockTest {
     @Test
     @DisplayName("고객 정보 일부 수정")
     public void patchSuccess() throws Exception {
-        CustomerRequest.CustomerPatchUpdateRequest request = new CustomerRequest.CustomerPatchUpdateRequest("유광열");
+        CustomerRequest.PatchUpdateRequest request = new CustomerRequest.PatchUpdateRequest("유광열");
         Customer customer = CustomerExample.customer;
         given(customerService.getCustomer(customer.getId())).willReturn(Optional.of(customer));
         given(customerService.mergeCustomer(customer)).willReturn(customer);
@@ -181,7 +180,7 @@ class CustomerControllerMockTest {
     @Test
     @DisplayName("고객 정보 저장 실패 - 이름 미입력 (Validation)")
     public void postValid() throws Exception {
-        CustomerRequest.CustomerInsertRequest request = new CustomerRequest.CustomerInsertRequest("", "01040234504");
+        CustomerRequest.InsertRequest request = new CustomerRequest.InsertRequest("", "01040234504");
         this.mockMvc.perform(
                         post("/customer")
                                 .content(objectMapper.writeValueAsBytes(request))

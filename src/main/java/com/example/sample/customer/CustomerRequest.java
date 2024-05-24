@@ -14,18 +14,18 @@ public class CustomerRequest {
     @Getter
     @Setter
     @NoArgsConstructor @AllArgsConstructor
-    @Schema(description = "고객 저장 정보")
-    public static class CustomerInsertRequest {
+//    @Schema(description = "고객 저장 정보")
+    public static class InsertRequest {
 
         @NotBlank(message = "이름을 입력해주세요.")
         @Size(max = 5, message = "이름은 5자리 이내로 입력해주세요.")
-        @Schema(description = "고객 이름", maximum = "5", minimum = "1", example = "박진희")
+//        @Schema(description = "고객 이름", maximum = "5", minimum = "1", example = "박진희")
         private String name;
 
         @NotBlank(message = "휴대폰 번호를 입력해주세요.")
         @Pattern(regexp = "[0-9]+", message = "휴대폰번호는 숫자로만 입력해주세요.")
         @Size(max = 11, message = "휴대폰 번호는 12자리 이내로 입력해주세요.")
-        @Schema(description = "휴대폰 번호", maximum = "11", minimum = "1", example = "01040234504", pattern = "[숫자로만 입력] - [0-9]+")
+//        @Schema(description = "휴대폰 번호", maximum = "11", minimum = "1", example = "01040234504", pattern = "[숫자로만 입력] - [0-9]+")
         private String tel;
 
         public Customer toEntity () {
@@ -36,18 +36,18 @@ public class CustomerRequest {
 
     @Getter @Setter @AllArgsConstructor
     @NoArgsConstructor
-    @Schema(description = "고객 전체 수정 정보")
-    public static class CustomerPutUpdateRequest {
+//    @Schema(description = "고객 전체 수정 정보")
+    public static class PutUpdateRequest {
 
         @NotBlank(message = "이름을 입력해주세요.")
         @Size(max = 5, message = "이름은 5자리 이내로 입력해주세요.")
-        @Schema(description = "고객 이름", maximum = "5", minimum = "1", example = "박진희")
+//        @Schema(description = "고객 이름", maximum = "5", minimum = "1", example = "박진희")
         private String name;
 
         @NotBlank(message = "휴대폰 번호를 입력해주세요.")
         @Pattern(regexp = "[0-9]+", message = "휴대폰번호는 숫자로만 입력해주세요.")
         @Size(max = 11, message = "휴대폰 번호는 12자리 이내로 입력해주세요.")
-        @Schema(description = "휴대폰 번호", maximum = "11", minimum = "1", example = "01040234504", pattern = "[숫자로만 입력] - [0-9]+")
+//        @Schema(description = "휴대폰 번호", maximum = "11", minimum = "1", example = "01040234504", pattern = "[숫자로만 입력] - [0-9]+")
         private String tel;
 
         public void update (Customer customer) {
@@ -57,12 +57,12 @@ public class CustomerRequest {
     }
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-    @Schema(description = "고객 일부 수정 정보")
-    public static class CustomerPatchUpdateRequest {
+//    @Schema(description = "고객 일부 수정 정보")
+    public static class PatchUpdateRequest {
 
         @NotBlank(message = "이름을 입력해주세요.")
         @Size(max = 5, message = "이름은 5자리 이내로 입력해주세요.")
-        @Schema(description = "고객 이름", maximum = "5", minimum = "1", example = "박진희")
+//        @Schema(description = "고객 이름", maximum = "5", minimum = "1", example = "박진희")
         private String name;
 
         public void update (Customer customer) {
