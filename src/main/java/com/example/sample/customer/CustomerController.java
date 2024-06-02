@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +41,8 @@ public class CustomerController {
 //                    )
 //            ),
 //    })
-    public ResponseEntity<List<CustomerDTO>> getCustomers() {
-        return ResponseEntity.ok(customerService.getCustomers());
+    public ResponseEntity<Page<CustomerDTO>> getCustomers(Pageable pageable) {
+        return ResponseEntity.ok(customerService.getCustomers(pageable));
     }
 
 
@@ -67,7 +69,7 @@ public class CustomerController {
     public ResponseEntity<CustomerDTO> getCustomer(
             @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id
     ) {
-        Optional<Customer> customerOptional = customerService.getCustomer(id);
+        Optional<CustomerEntity> customerOptional = customerService.getCustomer(id);
         if (customerOptional.isEmpty()) {
             throw new Common400Exception(CustomerConstant.notFoundMessage);
         }
@@ -95,14 +97,14 @@ public class CustomerController {
 //            ),
 //    })
     public ResponseEntity<CustomerDTO> saveCustomer(
-            @RequestBody @Valid CustomerRequest.InsertRequest request,
+            @RequestBody @Valid CustomerInsertRequest request,
             Errors errors
     ) {
         if (errors.hasErrors()) {
             throw new Common400Exception(errors.getFieldErrors().get(0).getDefaultMessage());
         }
 
-        return ResponseEntity.ok(customerService.mergeCustomer(request).toDTO());
+        return ResponseEntity.ok(customerService.save(request).toDTO());
     }
 
 //    @Operation(summary = "고객 전체 수정", description = "고객 정보를 전체 수정합니다.")
@@ -127,60 +129,20 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDTO> putCustomer(
             @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id,
-            @RequestBody @Valid CustomerRequest.PutUpdateRequest request,
+            @RequestBody @Valid CustomerUpdateRequest request,
             Errors errors
     ) {
         if (errors.hasErrors()) {
             throw new Common400Exception(errors.getFieldErrors().get(0).getDefaultMessage());
         }
 
-        Optional<Customer> customerOptional = customerService.getCustomer(id);
+        Optional<CustomerEntity> customerOptional = customerService.getCustomer(id);
         if (customerOptional.isEmpty()) {
             throw new Common400Exception(CustomerConstant.notFoundMessage);
         }
-        Customer customer = customerOptional.get();
-        request.update(customer);
+        CustomerEntity customer = customerOptional.get();
 
-        return ResponseEntity.ok(customerService.mergeCustomer(customer).toDTO());
-    }
-
-//    @Operation(summary = "고객 일부 수정", description = "고객 정보를 일부 수정합니다.")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "OK",
-//                    content = @Content(
-//                            schema = @Schema(
-//                                    implementation = CustomerDTO.class)
-//                    )
-//            ),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST",
-//                    content = @Content(
-//                            schema = @Schema(implementation = ProblemDetail.class)
-//                    )
-//            ),
-//            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR",
-//                    content = @Content(
-//                            schema = @Schema(implementation = ProblemDetail.class)
-//                    )
-//            ),
-//    })
-    @PatchMapping("/{id}")
-    public ResponseEntity<CustomerDTO> patchCustomer(
-            @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id,
-            @RequestBody @Valid CustomerRequest.PatchUpdateRequest request,
-            Errors errors
-    ) {
-        if (errors.hasErrors()) {
-            throw new Common400Exception(errors.getFieldErrors().get(0).getDefaultMessage());
-        }
-
-        Optional<Customer> customerOptional = customerService.getCustomer(id);
-        if (customerOptional.isEmpty()) {
-            throw new Common400Exception(CustomerConstant.notFoundMessage);
-        }
-        Customer customer = customerOptional.get();
-        request.update(customer);
-
-        return ResponseEntity.ok(customerService.mergeCustomer(customer).toDTO());
+        return ResponseEntity.ok(customerService.update(request, customer).toDTO());
     }
 
 
@@ -195,7 +157,7 @@ public class CustomerController {
             @Parameter(name = "id", description = "고객의 id", in = ParameterIn.PATH) @PathVariable Long id
     ) {
 
-        Optional<Customer> customerOptional = customerService.getCustomer(id);
+        Optional<CustomerEntity> customerOptional = customerService.getCustomer(id);
         if (customerOptional.isEmpty()) {
             throw new Common400Exception(CustomerConstant.notFoundMessage);
         }

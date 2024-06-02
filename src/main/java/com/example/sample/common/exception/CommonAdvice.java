@@ -30,4 +30,13 @@ public class CommonAdvice {
         );
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    ProblemDetail onException (
+            Exception exception
+    ) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatusCode.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), exception.getMessage()
+        );
+    }
 }

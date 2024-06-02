@@ -1,6 +1,6 @@
 package com.example.sample;
 
-import com.example.sample.customer.Customer;
+import com.example.sample.customer.CustomerEntity;
 import com.example.sample.customer.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class CustomerRepositoryTest {
         assertTrue(repository.findById(saveCustomer.getId()).isEmpty());
     }
 
-    private Customer saveCustomer() {
+    private CustomerEntity saveCustomer() {
         return repository.save(CustomerExample.customer);
     }
 

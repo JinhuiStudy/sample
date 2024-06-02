@@ -1,5 +1,7 @@
 package com.example.sample.customer;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,30 +18,34 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public List<CustomerDTO> getCustomers() {
-        return customerRepository.findAll()
-                .stream()
-                .map(Customer::toDTO)
-                .toList();
+    public Page<CustomerDTO> getCustomers(Pageable pageable) {
+        return customerRepository.findAll(pageable)
+                .map(CustomerEntity::toDTO);
     }
 
-    public Optional<Customer> getCustomer(Long id) {
+    public Optional<CustomerEntity> getCustomer(Long id) {
         return customerRepository.findById(id);
     }
 
     @Transactional
-    public Customer mergeCustomer(Customer customer) {
-        return customerRepository.save(customer);
+    public CustomerEntity update(CustomerUpdateRequest request, CustomerEntity entity) {
+        entity.setTel(request.tel());
+        entity.setName(request.name());
+        return customerRepository.save(entity);
     }
 
 
     @Transactional
-    public Customer mergeCustomer(CustomerRequest.InsertRequest request) {
-        return mergeCustomer(request.toEntity());
+    public CustomerEntity save(CustomerInsertRequest request) {
+        return customerRepository.save(new CustomerEntity(
+            null,
+            request.name(),
+            request.tel()
+        ));
     }
 
     @Transactional
-    public void deleteCustomer(Customer customer) {
+    public void deleteCustomer(CustomerEntity customer) {
         customerRepository.delete(customer);
     }
 

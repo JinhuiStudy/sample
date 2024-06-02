@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
-@Getter
-@Table(name = "customer_tb")
+@Table(name = "customer")
 @Entity
-@Setter
+@Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class Customer {
+public class CustomerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +21,8 @@ public class Customer {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Comment("전화번호")
+    @Column(nullable = false, length = 20)
     private String tel;
 
     public CustomerDTO toDTO() {

@@ -6,17 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-//@Schema(description = "고객 정보")
-@Getter @Setter @AllArgsConstructor
-public class CustomerDTO {
+public record CustomerDTO (
+        @Schema(description = "고객 ID")
+        Long id,
 
-    @Schema(description = "고객 ID")
-    private Long id;
+        @Schema(description = "고객 이름", example = "박진희")
+        String name,
 
-    @Schema(description = "고객 이름", example = "박진희")
-    private String name;
-
-    @Schema(description = "고객 전화번호", example = "01040234504")
-    private String tel;
+        @Schema(description = "고객 전화번호", example = "01040234504")
+        String tel
+) {
 
 }
